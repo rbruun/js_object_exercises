@@ -32,15 +32,80 @@
  */
 
 
- (function(){
+(function () {
     //@see https://stackoverflow.com/questions/1335851/what-does-use-strict-do-in-javascript-and-what-is-the-reasoning-behind-it
     'use strict';
 
     ///////////////////////////
-    // Put your code here!
+
+    function getRandom(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+    
+    function LivingThing(name, health) {
+        var name = name;
+        var health = health;
+
+        this.isAlive = function () {
+            return (health > 0);
+        }
+
+        this.getName = function () {
+            return name;
+        }
+        this.getHealth = function () {
+            return health;
+        }
+        this.setHealth = function (inhealth) {
+            health = inhealth;
+        }
+    }
+
+    function Hero(name, health) {
+        LivingThing.call(this, name, health);
+
+        this.attack = function(monster) {
+            let damage = getRandom(1,10);
+            monster.setHealth(monster.getHealth() - damage);
+            console.log(monster.getName() + "' health was reduced by " + damage + ". Current health is: " + monster.getHealth());
+            
+            damage = getRandom(1,10);
+            this.setHealth(this.getHealth() - damage);
+            console.log(this.getName() + "'s health was reduced by " + damage + ". Current health is: " + this.getHealth());
+        }
+
+        this.fight = function(inmonsters) {
+            var battleContinues = true;
+            while (battleContinues) {
+                var monstersAreDead = true;
+                for (let i=0; i<inmonsters.length; i++){
+                    if (inmonsters[i].isAlive() && this.isAlive()) {
+                        this.attack(inmonsters[i]);
+                        if (inmonsters[i].isAlive()) {
+                            monstersAreDead = false;
+                        }
+                    }
+                    if (!this.isAlive() || monstersAreDead) {
+                        battleContinues = false;
+                    }
+                }
+            }
+        }
+    }
+
+    let monster1 = new LivingThing("Rat", 5);
+    monster1.setHealth(55);
+    let monster2 = new LivingThing("Goblin", 10);
+    let monster3 = new LivingThing("Ogre", 80);
+
+    let monsters = [monster1, monster2, monster3];
+
+    let hero = new Hero("Gilligan", 100);
+
+    hero.fight(monsters);
     ///////////////////////////
 
-    
+
 
     //The code below should work when you are done
     console.log("A hero emerges!");
@@ -52,8 +117,7 @@
 
     if (hero.isAlive()) {
         console.log("The hero, " + hero.getName() + ", prevailed!");
-    }
-    else {
+    } else {
         console.log(hero.getName() + " was bested by the monsters. We are doomed");
     }
 

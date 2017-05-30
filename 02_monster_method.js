@@ -13,7 +13,22 @@
     'use strict';
 
     ///////////////////////////
-    // Put your code here!
+    
+    function LivingThing (name, health){
+        this.name = name;
+        this.health = health;
+         
+        this.isAlive = function() {
+        return (this.health > 0);
+        }
+    }
+    
+    let monster1 = new LivingThing("Rat", 5);
+    let monster2 = new LivingThing("Goblin", 10);
+    let monster3 = new LivingThing("Ogre", 90);
+    
+    let monsters = [monster1, monster2, monster3];
+
     ///////////////////////////
 
     
