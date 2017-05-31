@@ -61,48 +61,50 @@
         }
     }
 
+    function reduceHealth(liveThing){
+        let damage = getRandom(1,10);
+        liveThing.setHealth(liveThing.getHealth() - damage);
+        console.log(liveThing.getName() + "' health was reduced by " + damage + ". Current health is: " + liveThing.getHealth());
+    }
+    
     function Hero(name, health) {
         LivingThing.call(this, name, health);
 
         this.attack = function(monster) {
-            let damage = getRandom(1,10);
-            monster.setHealth(monster.getHealth() - damage);
-            console.log(monster.getName() + "' health was reduced by " + damage + ". Current health is: " + monster.getHealth());
-            
-            damage = getRandom(1,10);
-            this.setHealth(this.getHealth() - damage);
-            console.log(this.getName() + "'s health was reduced by " + damage + ". Current health is: " + this.getHealth());
+            // deduct damage from monster's health
+            reduceHealth(monster);
+
+            // deduct damage from hero's health
+            reduceHealth(this);
         }
 
         this.fight = function(inmonsters) {
-            var battleContinues = true;
+            let battleContinues = true;
             while (battleContinues) {
-                var monstersAreDead = true;
+                let monstersAreDead = true;
+                // battle the monsters
                 for (let i=0; i<inmonsters.length; i++){
-                    if (inmonsters[i].isAlive() && this.isAlive()) {
+                    if (inmonsters[i].isAlive() ) {
                         this.attack(inmonsters[i]);
                         if (inmonsters[i].isAlive()) {
                             monstersAreDead = false;
                         }
                     }
-                    if (!this.isAlive() || monstersAreDead) {
-                        battleContinues = false;
-                    }
+                }
+                // after each battle, stop if the hero is dead or all monsters are dead
+                if (!this.isAlive() || monstersAreDead) {
+                    battleContinues = false;
                 }
             }
         }
     }
 
-    let monster1 = new LivingThing("Rat", 5);
-    monster1.setHealth(55);
-    let monster2 = new LivingThing("Goblin", 10);
-    let monster3 = new LivingThing("Ogre", 80);
-
-    let monsters = [monster1, monster2, monster3];
+    let monsters = [new LivingThing("Rat", 5),
+                    new LivingThing("Goblin", 10),
+                    new LivingThing("Ogre", 80)];
 
     let hero = new Hero("Gilligan", 100);
 
-    hero.fight(monsters);
     ///////////////////////////
 
 
